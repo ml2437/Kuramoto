@@ -1,0 +1,2 @@
+# Kuramoto
+Kuramoto Model Visualizations
