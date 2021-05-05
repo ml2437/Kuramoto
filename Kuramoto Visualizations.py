@@ -165,3 +165,51 @@ def majorityclusterbackwardsRK(n, h, T):
     
     return verts
     
+    
+def visualize(verts):
+    n, _, T = np.shape(verts)
+
+    py.init_notebook_mode()
+
+    xs = verts[:,0,0]
+    ys = verts[:,1,0]
+    zs = verts[:,2,0]
+
+
+    f = go.FigureWidget(
+        data=[
+            go.Scatter3d(x=xs, y=ys, z=zs, mode='markers', marker=dict(
+            size=4,
+            colorscale='Viridis',   # choose a colorscale
+            opacity=0.8
+        ))]
+    )
+
+
+    f.update_layout(
+        scene = dict(
+            xaxis = dict(nticks=4, range=[-100,100],),
+                         yaxis = dict(nticks=4, range=[-50,100],),
+                         zaxis = dict(nticks=4, range=[-100,100],),),
+        width=700,
+        margin=dict(r=20, l=10, b=10, t=10))
+
+    def update_z(frequency):
+        f.data[0].x = verts[:,0,frequency]
+        f.data[0].y = verts[:,1,frequency]
+        f.data[0].z = verts[:,2,frequency]
+        f.update_layout(
+        scene = dict(
+            xaxis = dict(nticks=4, range=[-2,2],),
+                         yaxis = dict(nticks=4, range=[-2,2],),
+                         zaxis = dict(nticks=4, range=[-2,2],),),
+        width=700,
+        margin=dict(r=20, l=10, b=10, t=10))
+        f.update_layout(scene_aspectmode='cube')
+
+
+    freq_slider = interactive(update_z, frequency=(0, T-1, 1))
+    vb = VBox((f, freq_slider))
+    vb.layout.align_items = 'center'
+    vb
+    return vb
